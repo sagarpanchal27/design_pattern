@@ -48,7 +48,6 @@ class BaseDisplay: public IDisplayBehavior
     }
 };
 
-
 class WildDuckDisplay: public IDisplayBehavior
 {
     public:
@@ -109,7 +108,7 @@ class CityDuckQuack: public IQuackBehavior
     }
 };
 
-class RubberDuckQuack: public IQuackBehavior
+class ToyDuckQuack: public IQuackBehavior
 {
     public:
     void quack()
@@ -151,6 +150,8 @@ class WildDuck: public Duck
             pDisplay = disp;
             pQuack = quack;
         }
+
+        // other wild duck specific methods if any
 };
 
 class CityDuck: public Duck
@@ -162,55 +163,23 @@ class CityDuck: public Duck
             pDisplay = disp;
             pQuack = quack;
         }
+
+        // other city duck specific methods if any
 };
 
 // ToyDuck cannot fly as normal duck. So we need specific no-fly behavior for the toy duck class
-// class ToyDuck: public Duck
-// {
-//     public:
-//         void display()
-//         {
-//             std::cout << "ToyDuck:display\n";
-//         }
-//         void quack()
-//         {
-//             std::cout << "ToyDuck:quack\n";
-//         }
-//         void fly()
-//         {
-//             std::cout << "ToyDuck:can not fly\n";
-//         }
-// };
+class ToyDuck: public Duck
+{
+    public:
+        ToyDuck(IFlyBehavior *fly, IDisplayBehavior *disp, IQuackBehavior *quack)
+        {
+            pFly = fly;
+            pDisplay = disp;
+            pQuack = quack;
+        }
 
-// class MixDuck uses the display behavior of the WildDuck and quack behavior of the CityDuck
-// So in this case we need to reimplement the code which is already implemented in the other deried classes and cannot reuse the same code
-// class MixDuck: public Duck
-// {
-//     public:
-//         void display()
-//         {
-//             std::cout << "WildDuck:display\n";
-//         }
-//         void quack()
-//         {
-//             std::cout << "CityDuck:quack\n";
-//         }
-// };
-
-// class MountainDuck has again mix-match behavior with various other Duck classes and we need to reimplement the same behavior again
-
-// class MountainDuck: public Duck
-// {
-//     public:
-//         void display()
-//         {
-//             std::cout << "MixDuck:display\n";
-//         }
-//         void quack()
-//         {
-//             std::cout << "ToyDuck:quack\n";
-//         }
-// };
+        // other toy duck specific methods if any
+};
 
 int main()
 {
@@ -232,6 +201,15 @@ int main()
     cityDuck.get_display();
     cityDuck.get_fly();
     cityDuck.get_quack();
-    
+
+    // creating ToyDuck
+    IDisplayBehavior *toyDisplay = new ToyDuckDisplay();
+    IQuackBehavior *toyQuack = new ToyDuckQuack();
+    IFlyBehavior *toyFly = new NoFly();
+    ToyDuck toyDuck(toyFly, toyDisplay, toyQuack);
+    toyDuck.get_display();
+    toyDuck.get_fly();
+    toyDuck.get_quack();
+
     return 0;
 }
